@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1072" viewBox="0 0 1440 1072" role="img" aria-labelledby="title description">
+  <title id="title">Fieldnote system architecture</title>
+  <desc id="description">React sends requests through Vite to a local Python bridge. The bridge persists research runs in SQLite and starts an isolated observer worker, which calls the unchanged sequential search, reader, writer, and critic pipeline. Search uses Tavily, the reader accesses websites, and all four stages use NVIDIA.</desc>
+  <defs>
+    <linearGradient id="canvas" x2="1" y2="1"><stop stop-color="#141118"/><stop offset="1" stop-color="#0c0c10"/></linearGradient>
+    <linearGradient id="purple" x2="1" y2="1"><stop stop-color="#231c2f"/><stop offset="1" stop-color="#19151f"/></linearGradient>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1L7 4L1 7" fill="none" stroke="#8b7c9c" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></marker>
+    <marker id="accent-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M1 1L7 4L1 7" fill="none" stroke="#b39ae7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></marker>
+    <style>
+      text{font-family:Inter,Segoe UI,Arial,sans-serif}.label{font-size:11px;letter-spacing:1.7px;fill:#a295b0}.heading{font-size:23px;font-weight:500;fill:#f1edf5;letter-spacing:-.5px}.copy{font-size:14px;fill:#aaa0b6}.file{font-size:12px;fill:#b7a6cc;font-family:Consolas,monospace}.wire{fill:none;stroke:#8b7c9c;stroke-width:1.5;marker-end:url(#arrow)}.accent-wire{fill:none;stroke:#b39ae7;stroke-width:1.5;marker-end:url(#accent-arrow)}.box{fill:#18151d;stroke:#39313f;stroke-width:1}.hint{font-size:12px;fill:#ac9bbd}
+    </style>
+  </defs>
+  <rect width="1440" height="1072" rx="18" fill="url(#canvas)"/>
+  <path d="M64 125H1376" stroke="#302837"/>
+  <text x="64" y="44" class="label">FIELDNOTE / TECHNICAL OVERVIEW</text>
+  <text x="62" y="88" font-size="36" font-weight="500" letter-spacing="-1" fill="#f0eaf7">One workspace. Four research stages.</text>
+  <text x="64" y="112" font-size="14" fill="#9b8fa8">The implemented architecture · React + Bun + the existing Python pipeline</text>
+  <rect x="1118" y="45" width="258" height="32" rx="16" fill="#211b2a" stroke="#463650"/>
+  <circle cx="1136" cy="61" r="3" fill="#b39ae7"/>
+  <text x="1149" y="66" font-size="11" letter-spacing=".8" fill="#c8b4e3">LOCAL DEVELOPMENT SYSTEM</text>
+
+  <!-- UI, local adapter, and durable local state -->
+  <text x="64" y="160" class="label">01 / LOCAL APPLICATION</text>
+  <rect x="64" y="184" width="332" height="154" rx="12" class="box"/>
+  <text x="86" y="212" class="label">BROWSER + VITE · :5173</text>
+  <text x="86" y="247" class="heading">React workspace</text>
+  <text x="86" y="274" class="copy">Topic input · reports · critic review</text>
+  <text x="86" y="296" class="copy">Run polling every 1.5 seconds</text>
+  <text x="86" y="319" class="file">frontend/src/</text>
+
+  <rect x="468" y="184" width="396" height="154" rx="12" fill="url(#purple)" stroke="#4b3c5c"/>
+  <text x="490" y="212" class="label">LOCAL HTTP ADAPTER · :8000</text>
+  <text x="490" y="247" class="heading">Connection bridge</text>
+  <text x="490" y="274" class="copy">Validate topic · admit one active run</text>
+  <text x="490" y="296" class="copy">Persist progress · serve run history</text>
+  <text x="490" y="319" class="file">frontend/bridge.py</text>
+
+  <rect x="960" y="184" width="416" height="154" rx="12" class="box"/>
+  <text x="982" y="212" class="label">PERSISTENCE · THIS COMPUTER</text>
+  <text x="982" y="247" class="heading">SQLite research history</text>
+  <text x="982" y="274" class="copy">Topics · states · outputs · timestamps</text>
+  <text x="982" y="296" class="copy">Reopen previous research runs</text>
+  <text x="982" y="319" class="file">frontend/.data/research.sqlite3</text>
+
+  <path d="M396 261H468" class="wire"/>
+  <text x="413" y="245" class="hint">/api</text>
+  <path d="M868 261H956" class="wire" marker-start="url(#arrow)"/>
+  <text x="885" y="245" class="hint">read/write</text>
+
+  <!-- Child worker is an adapter, separate from original project code -->
+  <path d="M666 338V391" class="accent-wire"/>
+  <text x="685" y="369" class="hint">One isolated process per run</text>
+  <rect x="468" y="397" width="396" height="120" rx="12" fill="url(#purple)" stroke="#4b3c5c"/>
+  <text x="490" y="425" class="label">SUBPROCESS · INDEPENDENT STDIN</text>
+  <text x="490" y="456" class="heading">Pipeline observer</text>
+  <text x="490" y="481" class="copy">Observe console output → JSON-line events</text>
+  <text x="490" y="501" class="file">frontend/bridge_worker.py</text>
+  <path d="M466 458H419V362H640V340" class="wire"/>
+  <text x="65" y="397" class="label">OBSERVATION EVENTS</text>
+  <text x="65" y="424" class="copy">ready · stage · output · result · error</text>
+  <text x="65" y="450" class="copy">Provider keys stay in Python.</text>
+  <text x="65" y="473" class="copy">The browser receives run data only.</text>
+  <text x="960" y="410" class="label">FRONTEND CONNECTION BOUNDARY</text>
+  <text x="960" y="438" class="copy">No changes to original agents or tools.</text>
+  <text x="960" y="461" class="copy">No prompt or model overrides.</text>
+  <text x="960" y="484" class="copy">Progress comes from existing print calls.</text>
+
+  <path d="M666 517V570" class="accent-wire"/>
+  <text x="685" y="551" class="hint">Calls run_research_pipeline(topic)</text>
+
+  <!-- Existing application: two tool-using agents and two chains -->
+  <rect x="64" y="579" width="1312" height="244" rx="12" fill="#111014" stroke="#413649" stroke-dasharray="5 5"/>
+  <text x="88" y="611" class="label">02 / EXISTING PYTHON PROJECT · SEQUENTIAL EXECUTION</text>
+  <text x="1094" y="611" font-size="12" fill="#9f91ae">pipeline.py · agents.py · tools.py</text>
+
+  <rect x="88" y="636" width="280" height="146" rx="9" class="box"/>
+  <text x="108" y="663" class="label">01 · AGENT + TOOL</text>
+  <text x="108" y="698" class="heading">Web search</text>
+  <text x="108" y="724" class="copy">Find information on the topic</text>
+  <text x="108" y="754" class="file">search_results</text>
+
+  <rect x="408" y="636" width="280" height="146" rx="9" class="box"/>
+  <text x="428" y="663" class="label">02 · AGENT + TOOL</text>
+  <text x="428" y="698" class="heading">Source reader</text>
+  <text x="428" y="724" class="copy">Read and summarize a page</text>
+  <text x="428" y="754" class="file">scraped_content</text>
+
+  <rect x="728" y="636" width="280" height="146" rx="9" class="box"/>
+  <text x="748" y="663" class="label">03 · MODEL CHAIN</text>
+  <text x="748" y="698" class="heading">Report writer</text>
+  <text x="748" y="724" class="copy">Synthesize research into a draft</text>
+  <text x="748" y="754" class="file">report</text>
+
+  <rect x="1048" y="636" width="280" height="146" rx="9" class="box"/>
+  <text x="1068" y="663" class="label">04 · MODEL CHAIN</text>
+  <text x="1068" y="698" class="heading">Quality review</text>
+  <text x="1068" y="724" class="copy">Score the draft and give feedback</text>
+  <text x="1068" y="754" class="file">feedback</text>
+
+  <path d="M368 708H402" class="wire"/>
+  <path d="M688 708H722" class="wire"/>
+  <path d="M1008 708H1042" class="wire"/>
+  <text x="728" y="805" font-size="12" fill="#a493b5">Returned state: search_results · scraped_content · report · feedback</text>
+
+  <!-- External services; the NVIDIA connection represents the whole pipeline -->
+  <text x="728" y="861" class="label">03 / EXTERNAL SERVICES</text>
+  <path d="M228 782V888" class="wire"/>
+  <path d="M548 782V888" class="wire"/>
+  <path d="M1158 823V888" class="accent-wire"/>
+  <text x="1176" y="858" class="hint">Shared by all four stages</text>
+
+  <rect x="88" y="894" width="280" height="89" rx="9" class="box"/>
+  <text x="108" y="925" font-size="19" fill="#e5ddec">Tavily API</text>
+  <text x="108" y="950" class="copy">Search titles, URLs, and snippets</text>
+  <text x="108" y="970" class="file">web_search</text>
+
+  <rect x="408" y="894" width="280" height="89" rx="9" class="box"/>
+  <text x="428" y="925" font-size="19" fill="#e5ddec">Source websites</text>
+  <text x="428" y="950" class="copy">Requests + BeautifulSoup</text>
+  <text x="428" y="970" class="file">scrape_url</text>
+
+  <rect x="728" y="894" width="600" height="89" rx="9" fill="url(#purple)" stroke="#4b3c5c"/>
+  <text x="748" y="925" font-size="19" fill="#e5ddec">NVIDIA model API</text>
+  <text x="748" y="950" class="copy">nvidia/nemotron-3.5-lightning-30b-a3b</text>
+  <text x="748" y="970" class="file">One shared ChatOpenAI client configured in agents.py</text>
+
+  <path d="M64 1012H1376" stroke="#302837"/>
+  <text x="64" y="1042" font-size="13" fill="#ab9aba">Execution completion and research quality are separate: inspect sources and critic feedback.</text>
+  <text x="1240" y="1042" font-size="11" fill="#897b98">26 OCT 2026</text>
+</svg>

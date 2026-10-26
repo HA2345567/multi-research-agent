@@ -1,4 +1,3 @@
-
 from langchain.agents import create_agent
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -11,7 +10,7 @@ load_dotenv()
 
 # Model setup - NVIDIA API
 llm = ChatOpenAI(
-    model="nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
+    model="nvidia/nemotron-3.5-lightning-30b-a3b",
     base_url="https://integrate.api.nvidia.com/v1",
     api_key=os.getenv("NVIDIA_API_KEY"),
     temperature=0,

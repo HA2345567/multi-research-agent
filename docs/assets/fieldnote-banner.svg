@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="330" viewBox="0 0 1440 330" role="img" aria-labelledby="title desc">
+  <title id="title">Fieldnote — Multi-agent Research Studio</title>
+  <desc id="desc">A dark project banner for the research workspace, with search, read, write, and review stages.</desc>
+  <defs>
+    <linearGradient id="background" x2="1" y2="1"><stop stop-color="#18151f"/><stop offset="1" stop-color="#0c0c10"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#8d6ed3" stop-opacity=".18"/><stop offset="1" stop-color="#8d6ed3" stop-opacity="0"/></radialGradient>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#ffffff" stroke-opacity=".035"/></pattern>
+  </defs>
+  <rect width="1440" height="330" rx="20" fill="url(#background)"/>
+  <rect width="1440" height="330" rx="20" fill="url(#grid)"/>
+  <ellipse cx="1110" cy="150" rx="400" ry="250" fill="url(#glow)"/>
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <rect x="64" y="38" width="208" height="28" rx="14" fill="#26202f"/>
+    <circle cx="80" cy="52" r="3" fill="#b49be7"/>
+    <text x="93" y="57" font-size="11" letter-spacing="1.6" fill="#c1afd8">RESEARCH, IN MOTION</text>
+    <text x="60" y="159" font-size="82" font-weight="600" letter-spacing="-5" fill="#f3f0f7">fieldnote<tspan fill="#b39ae7">.</tspan></text>
+    <text x="65" y="205" font-size="25" letter-spacing="-.5" fill="#d6cfdf">Multi-agent Research Studio</text>
+    <text x="65" y="242" font-size="16" fill="#9f95ac">Search the web. Read the evidence. Write with context. Review the result.</text>
+    <g font-size="11" fill="#a99fb7" letter-spacing="1.5"><text x="65" y="293">REACT</text><text x="144" y="293">BUN</text><text x="205" y="293">PYTHON</text><text x="294" y="293">NVIDIA</text><text x="382" y="293">TAVILY</text></g>
+    <g fill="none" stroke="#4a3e5b" stroke-width="1.5"><path d="M1019 119H1042"/><path d="M1126 153V168H1031V184"/><path d="M1115 218H1138"/></g>
+    <g><rect x="851" y="85" width="168" height="68" rx="12" fill="#201b28" stroke="#4b3a60"/><rect x="1042" y="85" width="168" height="68" rx="12" fill="#18161d" stroke="#38303f"/><rect x="947" y="184" width="168" height="68" rx="12" fill="#18161d" stroke="#38303f"/><rect x="1138" y="184" width="168" height="68" rx="12" fill="#201b28" stroke="#4b3a60"/></g>
+    <g font-size="11" fill="#a18fb8" letter-spacing="1"><text x="868" y="109">01</text><text x="1059" y="109">02</text><text x="964" y="208">03</text><text x="1155" y="208">04</text></g>
+    <g font-size="18" fill="#e8e2ef"><text x="868" y="136">Search</text><text x="1059" y="136">Read</text><text x="964" y="235">Write</text><text x="1155" y="235">Review</text></g>
+  </g>
+</svg>

@@ -36,11 +36,19 @@ def scrape_url(url: str)-> str:
     
     try:
         resp = requests.get(url, timeout=8, headers={"User-Agent": "Mozilla/5.0"})
-        soup = BeautifulSoup(resp.text, "html.parser")
-        for tag in soup(["script", "style", "nav", "footer"]):
+        resp.raise_for_status()
+        content_type = resp.headers.get("Content-Type", "").split(";", 1)[0].lower()
+        if content_type and content_type not in ("text/html", "text/plain", "application/xhtml+xml"):
+            raise ValueError(f"Unsupported page type: {content_type}. Choose an HTML or text source.")
+        soup = BeautifulSoup(resp.content, "html.parser")
+        for tag in soup(["script", "style", "nav", "footer", "aside", "noscript"]):
             tag.decompose()
             
-        return soup.get_text(separator="\n", strip=True)[:3000]
+        content_root = soup.find("main") or soup.find(attrs={"role": "main"}) or soup.find("article") or soup.body or soup
+        content = content_root.get_text(separator="\n", strip=True)
+        if not content:
+            raise ValueError("The page returned no readable text")
+        return content[:3000]
     except Exception as e:
         return f"could not scrape the URL: {e}"
-    
+

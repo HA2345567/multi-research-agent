@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "bunx bun@1.4.2 install --cwd frontend --frozen-lockfile",
+  "buildCommand": "bunx bun@1.4.2 run --cwd frontend build",
+  "fluid": true,
+  "outputDirectory": "frontend/dist",
+  "functions": {
+    "api/research.py": {
+      "maxDuration": 300,
+      "excludeFiles": "{.venv/**,frontend/node_modules/**,frontend/dist/**,frontend/src/**,frontend/tests/**,frontend/.data/**,docs/**,**/__pycache__/**}"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/health", "destination": "/api/research?health=1" }
+  ]
+}

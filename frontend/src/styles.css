@@ -71,6 +71,11 @@ button svg, a svg { flex-shrink: 0; }
 .notice > button { flex: none; display: flex; align-items: center; gap: 5px; border: 0; background: none; color: inherit; font-size: 11px; padding: 2px 0 2px 8px; }
 .notice-error { background: #20191c; border-color: #493439; color: #d6b5bc; }
 .active-notice { align-items: center; cursor: pointer; }
+.deployment-access { padding: 17px; margin-bottom: 18px; border: 1px solid #3b3b44; border-radius: 9px; background: #19191e; }
+.deployment-access > div { display: flex; align-items: center; gap: 10px; }
+.deployment-access label { font-size: 12px; color: #dedee7; }
+.deployment-access p { color: #a5a5b0; font-size: 11px; line-height: 1.7; margin: 9px 0 12px; }
+.deployment-access input { flex: 1; width: 0; min-width: 0; padding: 10px; border: 1px solid #45454e; border-radius: 5px; background: #111114; color: #eeeef4; font-size: 12px; }
 
 .research { margin-top: 37px; }
 .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 15px; }

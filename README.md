@@ -4,7 +4,7 @@
 
 **A focused workspace for web research, source reading, report writing, and critique.**
 
-[Quick start](#quick-start) · [Architecture](#architecture) · [Workflow](#research-workflow) · [API](#local-api) · [Current limitations](#current-limitations)
+[Live app](https://multi-research-agent-pi.vercel.app) · [Quick start](#quick-start) · [Architecture](#architecture) · [Deployment](docs/DEPLOYMENT.md) · [Current limitations](#current-limitations)
 
 </div>
 
@@ -13,6 +13,8 @@
 ## Meet Fieldnote
 
 Fieldnote brings a Python research pipeline into a dark React workspace. Enter a topic, follow each stage, inspect the research, and read the critic's feedback in one place.
+
+The [Vercel deployment](https://multi-research-agent-pi.vercel.app) requires the owner's access code before starting research. Cloud runs stream to the browser, where their history is saved; keep the page open while a run is working.
 
 The project combines **two agents with tools** and **two language-model chains**, executed in sequence. All four stages use the NVIDIA model configured in `agents.py`. Tavily supplies web search; Requests and BeautifulSoup handle page extraction.
 
@@ -156,6 +158,8 @@ multi-agent-system/
 | `.\.venv\Scripts\python.exe -B frontend/bridge.py` | Project root | Start the connection bridge separately in an interactive terminal. |
 
 ## Local API
+
+For cloud hosting, see the [Vercel deployment guide](docs/DEPLOYMENT.md). The cloud adapter streams the same pipeline and keeps history in the browser; the local API below uses SQLite and polling.
 
 The React app uses relative `/api` requests. Vite forwards them to the bridge at `127.0.0.1:8000`.
 

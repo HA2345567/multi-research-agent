@@ -3,7 +3,7 @@ import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import {
   ArrowDownToLine, ArrowRight, ArrowUpRight, BookOpen, Check,
-  ChevronDown, Clock3, FileText, Globe2, Layers3, LoaderCircle,
+  ChevronDown, Clock3, FileText, Globe2, Layers3, LoaderCircle, LockKeyhole,
   MessageSquareText, Plus, X,
 } from 'lucide-react'
 import { useResearch } from './useResearch'
@@ -21,14 +21,16 @@ const markdownComponents = {
 }
 
 export default function App() {
-  const { runs, run, selectedId, health, connectionError, runError, submitting, refresh, select, clear, start } = useResearch()
+  const { runs, run, selectedId, health, connectionError, runError, submitting, refresh, select, clear, start, unlock } = useResearch()
   const [topic, setTopic] = useState('')
   const [tab, setTab] = useState('report')
+  const [accessCode, setAccessCode] = useState('')
+  const [unlocking, setUnlocking] = useState(false)
   const input = useRef(null)
   const history = useRef(null)
   const activeRun = runs.find(item => inProgress(item.status))
   const running = inProgress(run?.status)
-  const ready = health?.status === 'ready'
+  const ready = health?.status === 'ready' && !health.authentication_required
   const sources = run?.sources ?? []
   const needsReview = run?.status === 'complete' && (sources.length === 0 || (run.score != null && run.score < 5))
   const error = connectionError || runError || run?.error || (health?.missing?.length ? `Add ${health.missing.join(' and ')} to your project .env and restart the app.` : '')
@@ -131,6 +133,17 @@ export default function App() {
         <p>Explore an idea. Follow the evidence. See what comes together.</p>
       </section>
 
+      {health?.authentication_required && <form className="deployment-access" onSubmit={async event => {
+        event.preventDefault()
+        setUnlocking(true)
+        if (await unlock(accessCode)) setAccessCode('')
+        setUnlocking(false)
+      }}>
+        <div><LockKeyhole size={16} /><label htmlFor="access-code">Private research workspace</label></div>
+        <p>Enter your deployment access code to use the research agents.</p>
+        <div><input id="access-code" type="password" value={accessCode} onChange={event => setAccessCode(event.target.value)} autoComplete="current-password" placeholder="Deployment access code" /><button className="button button-outline" disabled={!accessCode.trim() || unlocking}>{unlocking ? 'Checking…' : 'Unlock'}</button></div>
+      </form>}
+
       {error && <div className="notice notice-error" role="alert">
         <span>{error}</span>
         {run?.status === 'failed' && ready && !connectionError
@@ -152,7 +165,7 @@ export default function App() {
           </button>
         </div>
       </form>
-      <div className="composer-note"><span className={`connection-dot ${ready ? 'is-connected' : ''}`} /><span title={health?.model}>{ready ? 'Connected to your research pipeline' : connectionError ? 'Connection unavailable' : health ? 'Configuration needed' : 'Connecting…'}</span><span className="saved-note">Saved on this computer</span></div>
+      <div className="composer-note"><span className={`connection-dot ${ready ? 'is-connected' : ''}`} /><span title={health?.model}>{ready ? 'Connected to your research pipeline' : connectionError ? 'Connection unavailable' : health?.authentication_required ? 'Access code required' : health ? 'Configuration needed' : 'Connecting…'}</span><span className="saved-note">{health?.mode === 'cloud' ? 'History saved in this browser' : 'Saved on this computer'}</span></div>
 
       <section className="research" aria-label="Research results">
         <div className="section-heading"><h2>The research process</h2><span className={`run-state ${running ? 'is-running' : ''} ${needsReview ? 'needs-review' : ''}`} aria-live="polite">{running && <span className="pulse-dot" />}{status}</span></div>
